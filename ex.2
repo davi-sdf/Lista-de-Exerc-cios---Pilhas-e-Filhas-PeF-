@@ -1,0 +1,120 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int topo;
+} Pilha;
+
+void iniciarPilha(Pilha *p) {
+    p->topo = -1;
+}
+
+// Alteração: adapta as mensagens para o contexto das bandejas da lanchonete.
+void empilhar(Pilha *p, int valor) {
+    if (p->topo == MAX - 1) {
+        printf("\n[ERRO] Nao e possivel adicionar: "
+               "o suporte de bandejas esta cheio!\n");
+    } else {
+        p->topo++;
+        p->itens[p->topo] = valor;
+        printf("\n[SUCESSO] Bandeja %d adicionada ao topo!\n", valor);
+    }
+}
+
+// Alteração: informa o numero de identificacao da bandeja retirada.
+void desempilhar(Pilha *p) {
+    if (p->topo == -1) {
+        printf("\n[ERRO] Nao ha bandejas para retirar!\n");
+    } else {
+        printf("\n[SUCESSO] Bandeja %d retirada do suporte!\n",
+               p->itens[p->topo]);
+        p->topo--;
+    }
+}
+
+// Nova funcao: consulta a proxima bandeja disponivel sem retira-la.
+void consultarTopo(Pilha *p) {
+    if (p->topo == -1) {
+        printf("\nNao ha bandejas disponiveis no suporte.\n");
+    } else {
+        printf("\nProxima bandeja disponivel: %d\n",
+               p->itens[p->topo]);
+    }
+}
+
+// Alteracao: adapta a exibicao para mostrar as bandejas do topo ate a base.
+void mostrarPilha(Pilha *p) {
+    if (p->topo == -1) {
+        printf("\nO suporte de bandejas esta vazio.\n");
+    } else {
+        printf("\n--- BANDEJAS DO TOPO ATE A BASE ---\n");
+
+        for (int i = p->topo; i >= 0; i--) {
+            printf("| Bandeja %d |\n", p->itens[i]);
+        }
+
+        printf("-------------------------\n");
+    }
+}
+
+int main() {
+    Pilha minhaPilha;
+    iniciarPilha(&minhaPilha);
+    int opcao, valor;
+
+    do {
+        printf("\n=== CONTROLE DE BANDEJAS DA LANCHONETE ===\n");
+
+        // Alteracao: adapta as opcoes do menu ao contexto da lanchonete.
+        printf("1. Adicionar bandeja\n");
+        printf("2. Retirar bandeja do topo\n");
+        printf("3. Consultar proxima bandeja\n"); // Nova opcao.
+        printf("4. Mostrar todas as bandejas\n"); // Opcao reorganizada.
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
+
+        if (scanf("%d", &opcao) != 1) {
+            printf("\nEntrada invalida!\n");
+            return 1;
+        }
+
+        switch (opcao) {
+            case 1:
+                printf("Digite o numero de identificacao da bandeja: ");
+
+                if (scanf("%d", &valor) != 1) {
+                    printf("\nIdentificacao invalida!\n");
+                    return 1;
+                }
+
+                empilhar(&minhaPilha, valor);
+                break;
+
+            case 2:
+                desempilhar(&minhaPilha);
+                break;
+
+            case 3:
+                consultarTopo(&minhaPilha);
+                break;
+
+            case 4:
+                mostrarPilha(&minhaPilha);
+                break;
+
+            case 0:
+                printf("\nEncerrando o controle de bandejas...\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida! Escolha uma opcao do menu.\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
