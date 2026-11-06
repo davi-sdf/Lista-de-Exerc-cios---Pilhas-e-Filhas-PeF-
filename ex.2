@@ -51,13 +51,13 @@ void mostrarPilha(Pilha *p) {
     if (p->topo == -1) {
         printf("\nO suporte de bandejas esta vazio.\n");
     } else {
-        printf("\n--- BANDEJAS DO TOPO ATE A BASE ---\n");
+        printf("\n BANDEJAS DO TOPO ATE A BASE \n");
 
         for (int i = p->topo; i >= 0; i--) {
             printf("| Bandeja %d |\n", p->itens[i]);
         }
 
-        printf("-------------------------\n");
+        printf("----------------\n");
     }
 }
 
@@ -67,7 +67,7 @@ int main() {
     int opcao, valor;
 
     do {
-        printf("\n=== CONTROLE DE BANDEJAS DA LANCHONETE ===\n");
+        printf("\n CONTROLE DE BANDEJAS DA LANCHONETE \n");
 
         // Alteracao: adapta as opcoes do menu ao contexto da lanchonete.
         printf("1. Adicionar bandeja\n");
