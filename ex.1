@@ -36,7 +36,7 @@ void mostrarPilha(Pilha *p) {
     if (p->topo == -1) {
         printf("\nA pilha esta vazia.\n");
     } else {
-        printf("\n--- ESTADO ATUAL DA PILHA ---\n");
+        printf("\n ESTADO ATUAL DA PILHA \n");
         for (int i = p->topo; i >= 0; i--) {
             printf("| %4d |\n", p->itens[i]);
         }
