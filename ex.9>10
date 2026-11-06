@@ -1,0 +1,147 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int inicio;
+    int fim;
+} Fila;
+
+// Inicializa a fila.
+void iniciarFila(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+}
+
+// Verifica se a fila está cheia.
+int filaCheia(Fila *f) {
+    return f->fim == MAX;
+}
+
+// Verifica se a fila está vazia.
+int filaVazia(Fila *f) {
+    return f->fim == 0;
+}
+
+// Insere uma tarefa no final da fila.
+void enfileirar(Fila *f, int tarefa) {
+    if (filaCheia(f)) {
+        printf("\n[ERRO] A fila esta cheia!\n");
+    } else {
+        f->itens[f->fim] = tarefa;
+        f->fim++;
+        printf("\n[SUCESSO] Tarefa %d adicionada!\n", tarefa);
+    }
+}
+
+// Remove a primeira tarefa e disponibiliza seu identificador.
+int desenfileirar(Fila *f, int *tarefa) {
+    if (filaVazia(f)) {
+        return 0;
+    }
+
+    *tarefa = f->itens[0];
+
+    // Desloca os elementos restantes para a esquerda.
+    for (int i = 0; i < f->fim - 1; i++) {
+        f->itens[i] = f->itens[i + 1];
+    }
+
+    f->fim--;
+    f->inicio = 0;
+
+    return 1;
+}
+
+// Executa uma rodada do rodízio de tarefas.
+void executarRodada(Fila *f) {
+    int tarefa;
+    int concluida;
+
+    if (!desenfileirar(f, &tarefa)) {
+        printf("\n[ERRO] Nao existem tarefas na fila!\n");
+        return;
+    }
+
+    printf("\nExecutando tarefa %d...\n", tarefa);
+
+    // Verifica se a tarefa foi concluída.
+    do {
+        printf("A tarefa foi concluida? (1 - Sim / 0 - Nao): ");
+        scanf("%d", &concluida);
+
+        if (concluida != 0 && concluida != 1) {
+            printf("[ERRO] Digite 1 para sim ou 0 para nao.\n");
+        }
+    } while (concluida != 0 && concluida != 1);
+
+    if (concluida == 1) {
+        printf("\nTarefa %d concluida e removida da fila!\n", tarefa);
+    } else {
+        // Reinsere a tarefa no final da fila.
+        // A remoção anterior liberou uma posição.
+        enfileirar(f, tarefa);
+        printf("Tarefa %d retornou ao final da fila.\n", tarefa);
+    }
+}
+
+// Mostra todas as tarefas aguardando execução.
+void mostrarFila(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\nNao existem tarefas pendentes.\n");
+    } else {
+        printf("\n--- TAREFAS NA FILA ---\n");
+
+        for (int i = 0; i < f->fim; i++) {
+            printf("[%d] ", f->itens[i]);
+        }
+
+        printf("\n");
+    }
+}
+
+int main() {
+    Fila tarefas;
+    int opcao, valor;
+
+    iniciarFila(&tarefas);
+
+    do {
+        printf("\n=== SISTEMA DE RODIZIO DE TAREFAS ===\n");
+        printf("1. Adicionar tarefa\n");
+        printf("2. Executar uma rodada\n");
+        printf("3. Mostrar tarefas pendentes\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                printf("Digite o identificador da tarefa: ");
+                scanf("%d", &valor);
+                enfileirar(&tarefas, valor);
+                break;
+
+            case 2:
+                executarRodada(&tarefas);
+                break;
+
+            case 3:
+                mostrarFila(&tarefas);
+                break;
+
+            case 0:
+                printf("\nEncerrando sistema...\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
