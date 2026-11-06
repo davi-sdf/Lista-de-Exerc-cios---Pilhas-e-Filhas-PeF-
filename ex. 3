@@ -1,0 +1,72 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int topo;
+} Pilha;
+
+// Inicializa a pilha como vazia.
+void iniciarPilha(Pilha *p) {
+    p->topo = -1;
+}
+
+// Insere um valor no topo da pilha.
+void empilhar(Pilha *p, int valor) {
+    if (p->topo == MAX - 1) {
+        printf("\n[ERRO] A pilha esta cheia!\n");
+    } else {
+        p->topo++;
+        p->itens[p->topo] = valor;
+    }
+}
+
+// Remove um valor e o retorna para o programa.
+int desempilhar(Pilha *p, int *valor) {
+    if (p->topo == -1) {
+        printf("\n[ERRO] A pilha esta vazia!\n");
+        return 0;
+    } else {
+        *valor = p->itens[p->topo];
+        p->topo--;
+        return 1;
+    }
+}
+
+int main() {
+    Pilha minhaPilha;
+    int quantidade, valor;
+
+    iniciarPilha(&minhaPilha);
+
+    // Solicita a quantidade de números.
+    do {
+        printf("Digite a quantidade de numeros (1 a %d): ", MAX);
+        scanf("%d", &quantidade);
+
+        if (quantidade < 1 || quantidade > MAX) {
+            printf("[ERRO] Quantidade invalida!\n");
+        }
+    } while (quantidade < 1 || quantidade > MAX);
+
+    // Lê e empilha os números informados.
+    for (int i = 0; i < quantidade; i++) {
+        printf("Digite o %d numero: ", i + 1);
+        scanf("%d", &valor);
+        empilhar(&minhaPilha, valor);
+    }
+
+    // Desempilha e apresenta os números na ordem inversa.
+    printf("\nSequencia na ordem inversa:\n");
+
+    while (desempilhar(&minhaPilha, &valor)) {
+        printf("%d ", valor);
+    }
+
+    printf("\n\nA pilha esta vazia.\n");
+
+    return 0;
+}
