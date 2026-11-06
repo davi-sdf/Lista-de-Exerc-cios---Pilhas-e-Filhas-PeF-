@@ -1,0 +1,141 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int inicio;
+    int fim;
+} Fila;
+
+// Inicializa a fila.
+void iniciarFila(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+}
+
+// Verifica se a fila está cheia.
+int filaCheia(Fila *f) {
+    return f->fim == MAX;
+}
+
+// Verifica se a fila está vazia.
+int filaVazia(Fila *f) {
+    return f->inicio == f->fim;
+}
+
+// Adiciona um trabalho à fila.
+void enfileirar(Fila *f, int trabalho) {
+    if (filaCheia(f)) {
+        printf("\n[ERRO] Fila de impressao cheia!\n");
+    } else {
+        f->itens[f->fim] = trabalho;
+        f->fim++;
+        printf("\nTrabalho %d adicionado!\n", trabalho);
+    }
+}
+
+// Remove e retorna o próximo trabalho.
+int desenfileirar(Fila *f, int *trabalho) {
+    if (filaVazia(f)) {
+        return 0;
+    }
+
+    *trabalho = f->itens[f->inicio];
+    f->inicio++;
+
+    return 1;
+}
+
+// Imprime o próximo trabalho.
+void imprimirProximo(Fila *f) {
+    int trabalho;
+
+    if (desenfileirar(f, &trabalho)) {
+        printf("\nImprimindo trabalho %d...\n", trabalho);
+        printf("Trabalho %d impresso com sucesso!\n", trabalho);
+    } else {
+        printf("\nNao ha trabalhos pendentes.\n");
+    }
+}
+
+// Lista os trabalhos que aguardam impressão.
+void listarPendentes(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\nNao ha trabalhos pendentes.\n");
+    } else {
+        printf("\n--- TRABALHOS PENDENTES ---\n");
+
+        for (int i = f->inicio; i < f->fim; i++) {
+            printf("Trabalho %d\n", f->itens[i]);
+        }
+    }
+}
+
+// Processa todos os trabalhos individualmente.
+void imprimirTodos(Fila *f) {
+    int trabalho;
+
+    if (filaVazia(f)) {
+        printf("\nNao ha trabalhos para imprimir.\n");
+    } else {
+        printf("\n--- IMPRESSAO DE TODOS OS TRABALHOS ---\n");
+
+        while (desenfileirar(f, &trabalho)) {
+            printf("Imprimindo trabalho %d...\n", trabalho);
+            printf("Trabalho %d impresso com sucesso!\n", trabalho);
+        }
+
+        printf("\nTodos os trabalhos foram impressos.\n");
+    }
+}
+
+int main() {
+    Fila impressora;
+    int opcao, trabalho;
+
+    iniciarFila(&impressora);
+
+    do {
+        printf("\n=== FILA DE IMPRESSAO ===\n");
+        printf("1. Adicionar trabalho\n");
+        printf("2. Imprimir proximo\n");
+        printf("3. Listar pendentes\n");
+        printf("4. Imprimir todos\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                printf("Digite o identificador do trabalho: ");
+                scanf("%d", &trabalho);
+                enfileirar(&impressora, trabalho);
+                break;
+
+            case 2:
+                imprimirProximo(&impressora);
+                break;
+
+            case 3:
+                listarPendentes(&impressora);
+                break;
+
+            case 4:
+                imprimirTodos(&impressora);
+                break;
+
+            case 0:
+                printf("\nEncerrando impressora...\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
