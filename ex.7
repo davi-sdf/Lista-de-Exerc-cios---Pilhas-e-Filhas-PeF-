@@ -1,0 +1,130 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int inicio;
+    int fim;
+} Fila;
+
+// Inicializa a fila.
+void iniciarFila(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+}
+
+// Verifica se a fila está cheia.
+int filaCheia(Fila *f) {
+    return f->fim == MAX;
+}
+
+// Verifica se a fila está vazia.
+int filaVazia(Fila *f) {
+    return f->inicio == f->fim;
+}
+
+// Insere uma senha na fila.
+void enfileirar(Fila *f, int senha) {
+    if (filaCheia(f)) {
+        printf("\n[ERRO] A fila esta cheia!\n");
+    } else {
+        f->itens[f->fim] = senha;
+        f->fim++;
+        printf("\n[SUCESSO] Senha %d gerada!\n", senha);
+    }
+}
+
+// Remove e retorna a próxima senha.
+int desenfileirar(Fila *f, int *senha) {
+    if (filaVazia(f)) {
+        return 0;
+    }
+
+    *senha = f->itens[f->inicio];
+    f->inicio++;
+
+    return 1;
+}
+
+// Consulta a próxima senha sem removê-la.
+void consultarSenha(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\nNao ha senhas aguardando atendimento.\n");
+    } else {
+        printf("\nProxima senha: %d\n", f->itens[f->inicio]);
+    }
+}
+
+// Mostra todas as senhas aguardando atendimento.
+void mostrarFila(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\nNao ha senhas na fila.\n");
+    } else {
+        printf("\n--- SENHAS AGUARDANDO ---\n");
+
+        for (int i = f->inicio; i < f->fim; i++) {
+            printf("Senha %d\n", f->itens[i]);
+        }
+    }
+}
+
+int main() {
+    Fila minhaFila;
+    int opcao, senha;
+    int proximaSenha = 1;
+
+    iniciarFila(&minhaFila);
+
+    do {
+        printf("\n=== SISTEMA DE ATENDIMENTO ===\n");
+        printf("1. Gerar senha\n");
+        printf("2. Chamar proxima senha\n");
+        printf("3. Consultar proxima senha\n");
+        printf("4. Mostrar senhas aguardando\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                // A senha só é gerada se houver espaço na fila.
+                if (!filaCheia(&minhaFila)) {
+                    enfileirar(&minhaFila, proximaSenha);
+                    proximaSenha++;
+                } else {
+                    printf("\n[ERRO] Fila cheia! Senha nao gerada.\n");
+                }
+                break;
+
+            case 2:
+                // Chama e remove a primeira senha.
+                if (desenfileirar(&minhaFila, &senha)) {
+                    printf("\nChamando senha: %d\n", senha);
+                } else {
+                    printf("\n[ERRO] Nao ha pessoas para atender.\n");
+                }
+                break;
+
+            case 3:
+                consultarSenha(&minhaFila);
+                break;
+
+            case 4:
+                mostrarFila(&minhaFila);
+                break;
+
+            case 0:
+                printf("\nEncerrando atendimento...\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
