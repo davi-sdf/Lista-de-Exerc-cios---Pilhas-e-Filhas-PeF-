@@ -1,0 +1,113 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+typedef struct {
+    int itens[MAX];
+    int inicio;
+    int fim;
+} Fila;
+
+// Inicializa a fila.
+void iniciarFila(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+}
+
+// Verifica se a fila está cheia.
+int filaCheia(Fila *f) {
+    return f->fim == MAX;
+}
+
+// Verifica se a fila está vazia.
+int filaVazia(Fila *f) {
+    return f->fim == 0;
+}
+
+// Insere um elemento no final da fila.
+void enfileirar(Fila *f, int valor) {
+    if (filaCheia(f)) {
+        printf("\n[ERRO] A fila esta cheia!\n");
+    } else {
+        f->itens[f->fim] = valor;
+        f->fim++;
+        printf("\n[SUCESSO] %d entrou na fila!\n", valor);
+    }
+}
+
+// Remove o primeiro elemento e desloca os restantes.
+void desenfileirar(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\n[ERRO] A fila esta vazia!\n");
+    } else {
+        printf("\n[SUCESSO] %d saiu da fila!\n", f->itens[0]);
+
+        // Desloca todos os elementos uma posição para a esquerda.
+        for (int i = 0; i < f->fim - 1; i++) {
+            f->itens[i] = f->itens[i + 1];
+        }
+
+        f->fim--;
+        f->inicio = 0;
+    }
+}
+
+// Mostra os elementos da fila.
+void mostrarFila(Fila *f) {
+    if (filaVazia(f)) {
+        printf("\nA fila esta vazia.\n");
+    } else {
+        printf("\n--- ESTADO ATUAL DA FILA ---\n");
+
+        for (int i = 0; i < f->fim; i++) {
+            printf("[%d] ", f->itens[i]);
+        }
+
+        printf("\n");
+    }
+}
+
+int main() {
+    Fila minhaFila;
+    int opcao, valor;
+
+    iniciarFila(&minhaFila);
+
+    do {
+        printf("\n=== MENU FILA COM REUTILIZACAO ===\n");
+        printf("1. Enfileirar\n");
+        printf("2. Desenfileirar\n");
+        printf("3. Mostrar fila\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                printf("Digite o valor: ");
+                scanf("%d", &valor);
+                enfileirar(&minhaFila, valor);
+                break;
+
+            case 2:
+                desenfileirar(&minhaFila);
+                break;
+
+            case 3:
+                mostrarFila(&minhaFila);
+                break;
+
+            case 0:
+                printf("\nSaindo...\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
